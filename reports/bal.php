@@ -111,34 +111,42 @@ if (!$output_form){
 	while ($row = mysqli_fetch_array($result3)) {
 		array_push($agr,$row);}
 	
+	array_walk_recursive($agr, 
+		function (&$value) {
+			if (is_numeric($value)) {
+				$value = round($value / 1000);
+			}
+		}
+	);
+		
 	//Формируем вывод результатов в таблице
 	echo '<div id="report">'; //Таблица в блоке div для сохранения в CSV	
 	  
 	$table = '<table><tr><th>Активы</th><th>UAH, тыс.</th><th>RUB, тыс.</th><th>USD, тыс.</th><th>EUR, тыс.</th></tr>';	
-	$table .= '<tr><td style="text-align:left;">Денежные средства в платежных системах</td><td>'.round($agr[9]['ds_ps']/1000).'</td><td>'.round($agr[8]['ds_ps']/1000).'</td><td>'.round($agr[10]['ds_ps']/1000).'</td><td>'.round($agr[11]['ds_ps']/1000).'</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Денежные средства в платежных системах</td><td>'.$agr[9]['ds_ps'].'</td><td>'.$agr[8]['ds_ps'].'</td><td>'.$agr[10]['ds_ps'].'</td><td>'.$agr[11]['ds_ps'].'</td></tr>';
 	$table .= '<tr><td style="text-align:left;">Трансферы</td>
-		<td>'.round(($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv']+$agr[9]['ds_m']-$agr[9]['ds_ps'])/1000).'</td>
-		<td>'.round(($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv']+$agr[8]['ds_m']-$agr[8]['ds_ps'])/1000).'</td>
-		<td>'.round(($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv']+$agr[10]['ds_m']-$agr[10]['ds_ps'])/1000).'</td>
-		<td>'.round(($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv']+$agr[11]['ds_m']-$agr[11]['ds_ps'])/1000).'</td></tr>';
+		<td>'.($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv']+$agr[9]['ds_m']-$agr[9]['ds_ps']).'</td>
+		<td>'.($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv']+$agr[8]['ds_m']-$agr[8]['ds_ps']).'</td>
+		<td>'.($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv']+$agr[10]['ds_m']-$agr[10]['ds_ps']).'</td>
+		<td>'.($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv']+$agr[11]['ds_m']-$agr[11]['ds_ps']).'</td></tr>';
 	$table .= '<tr><td class="total">Баланс</td>
-		<td class="total" style="text-align:right;">'.round(($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv']+$agr[9]['ds_m'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv']+$agr[8]['ds_m'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv']+$agr[10]['ds_m'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv']+$agr[11]['ds_m'])/1000).'</td></tr>';
+		<td class="total" style="text-align:right;">'.($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv']+$agr[9]['ds_m']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv']+$agr[8]['ds_m']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv']+$agr[10]['ds_m']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv']+$agr[11]['ds_m']).'</td></tr>';
 	$table .= '<tr><td colspan="5"></td></tr>';	
 	$table .= '<tr><th>Обязательства и капитал</th><th>UAH, тыс.</th><th>RUB, тыс.</th><th>USD, тыс.</th><th>EUR, тыс.</th></tr>';
 	$table .= '<tr><td style="text-align:left;">Прибыль</td>
-		<td>'.round(($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv'])/1000).'</td>
-		<td>'.round(($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv'])/1000).'</td>
-		<td>'.round(($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv'])/1000).'</td>
-		<td>'.round(($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv'])/1000).'</td></tr>';
-	$table .= '<tr><td style="text-align:left;">Денежные средства мерчантов</td><td>'.round($agr[9]['ds_m']/1000).'</td><td>'.round($agr[8]['ds_m']/1000).'</td><td>'.round($agr[10]['ds_m']/1000).'</td><td>'.round($agr[11]['ds_m']/1000).'</td></tr>';
+		<td>'.($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv']).'</td>
+		<td>'.($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv']).'</td>
+		<td>'.($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv']).'</td>
+		<td>'.($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv']).'</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Денежные средства мерчантов</td><td>'.$agr[9]['ds_m'].'</td><td>'.$agr[8]['ds_m'].'</td><td>'.$agr[10]['ds_m'].'</td><td>'.$agr[11]['ds_m'].'</td></tr>';
 	$table .= '<tr><td class="total">Баланс</td>
-		<td class="total" style="text-align:right;">'.round(($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv']+$agr[9]['ds_m'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv']+$agr[8]['ds_m'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv']+$agr[10]['ds_m'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv']+$agr[11]['ds_m'])/1000).'</td></tr>';
+		<td class="total" style="text-align:right;">'.($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv']+$agr[9]['ds_m']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv']+$agr[8]['ds_m']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv']+$agr[10]['ds_m']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv']+$agr[11]['ds_m']).'</td></tr>';
 	$table .= '</table>';
 	
 	echo $table; 

@@ -67,15 +67,15 @@ if (!$output_form){
 	$date_balance = mysqli_real_escape_string($dbc, $date_balance);
   
     $query1 = "SELECT p.merch_name, p.curr_merch, i.inSum, o.outSum, IFNULL(i.inSum,0)-IFNULL(o.outSum,0) AS balance
-	FROM (SELECT merch_name, curr_merch from merchants) AS p
+	FROM (SELECT merch_id, merch_name, curr_merch from merchants) AS p
 	LEFT JOIN
-	(SELECT merch_name, curr_merch, SUM(input_co_curr) AS inSum FROM invoices
-	WHERE date <= '$date_balance' GROUP BY merch_name, curr_merch)
-	AS i ON p.merch_name=i.merch_name AND p.curr_merch=i.curr_merch
+	(SELECT merch_id, curr_merch, SUM(input_co_curr) AS inSum FROM invoices
+	WHERE date <= '$date_balance' GROUP BY merch_id, curr_merch)
+	AS i ON p.merch_id=i.merch_id AND p.curr_merch=i.curr_merch
 	LEFT JOIN
-	(SELECT merch_name, curr_merch, SUM(withdr_co_curr) AS outSum FROM withdraws
-	WHERE date <= '$date_balance' GROUP BY merch_name, curr_merch)
-    AS o ON p.merch_name=o.merch_name AND p.curr_merch=o.curr_merch";
+	(SELECT merch_id, curr_merch, SUM(withdr_co_curr) AS outSum FROM withdraws
+	WHERE date <= '$date_balance' GROUP BY merch_id, curr_merch)
+    AS o ON p.merch_id=o.merch_id AND p.curr_merch=o.curr_merch";
 	$result1 = mysqli_query($dbc, $query1)
       or die('Error querying database1.');
 	$h4 = "<h4>Отчет на дату ".$date_balance."</h4>";

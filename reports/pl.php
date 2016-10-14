@@ -91,23 +91,31 @@ if (!$output_form){
 	while ($row = mysqli_fetch_array($result2)) {
 		array_push($agr,$row);}
 		
-	$table .= '<tr><td style="text-align:left;">Доходы по вводу</td><td>'.round($agr[2]['inc']/1000).'</td><td>'.round($agr[1]['inc']/1000).'</td><td>'.round($agr[3]['inc']/1000).'</td><td>'.round($agr[0]['inc']/1000).'</td></tr>';
-	$table .= '<tr><td style="text-align:left;">Комиссия банка</td><td>('.round($agr[2]['bank']/1000).')</td><td>('.round($agr[1]['bank']/1000).')</td><td>('.round($agr[3]['bank']/1000).')</td><td>('.round($agr[0]['bank']/1000).')</td></tr>';
-	$table .= '<tr><td style="text-align:left;">Прибыль от комиссионных операций</td><td>'.round($agr[2]['pf']/1000).'</td><td>'.round($agr[1]['pf']/1000).'</td><td>'.round($agr[3]['pf']/1000).'</td><td>'.round($agr[0]['pf']/1000).'</td></tr>';
-	$table .= '<tr><td style="text-align:left;">Конвертационный доход</td><td>'.round($agr[2]['conv']/1000).'</td><td>'.round($agr[1]['conv']/1000).'</td><td>'.round($agr[3]['conv']/1000).'</td><td>'.round($agr[0]['conv']/1000).'</td></tr>';
-	$table .= '<tr class="total"><td style="text-align:left;">Всего прибыль по вводу</td><td>'.round(($agr[2]['pf']+$agr[2]['conv'])/1000).'</td><td>'.round(($agr[1]['pf']+$agr[1]['conv'])/1000).'</td><td>'.round(($agr[3]['pf']+$agr[3]['conv'])/1000).'</td><td>'.round(($agr[0]['pf']+$agr[0]['conv'])/1000).'</td></tr>';
+	array_walk_recursive($agr, 
+		function (&$value) {
+			if (is_numeric($value)) {
+				$value = round($value / 1000);
+			}
+		}
+	);
+		
+	$table .= '<tr><td style="text-align:left;">Доходы по вводу</td><td>'.$agr[2]['inc'].'</td><td>'.$agr[1]['inc'].'</td><td>'.$agr[3]['inc'].'</td><td>'.$agr[0]['inc'].'</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Комиссия банка</td><td>('.$agr[2]['bank'].')</td><td>('.$agr[1]['bank'].')</td><td>('.$agr[3]['bank'].')</td><td>('.$agr[0]['bank'].')</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Прибыль от комиссионных операций</td><td>'.$agr[2]['pf'].'</td><td>'.$agr[1]['pf'].'</td><td>'.$agr[3]['pf'].'</td><td>'.$agr[0]['pf'].'</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Конвертационный доход</td><td>'.$agr[2]['conv'].'</td><td>'.$agr[1]['conv'].'</td><td>'.$agr[3]['conv'].'</td><td>'.$agr[0]['conv'].'</td></tr>';
+	$table .= '<tr class="total"><td style="text-align:left;">Всего прибыль по вводу</td><td>'.($agr[2]['pf']+$agr[2]['conv']).'</td><td>'.($agr[1]['pf']+$agr[1]['conv']).'</td><td>'.($agr[3]['pf']+$agr[3]['conv']).'</td><td>'.($agr[0]['pf']+$agr[0]['conv']).'</td></tr>';
 	$table .= '<tr><td colspan="5"></td></tr>';	
-	$table .= '<tr><td style="text-align:left;">Доходы по выводу</td><td>'.round($agr[6]['inc']/1000).'</td><td>'.round($agr[5]['inc']/1000).'</td><td>'.round($agr[7]['inc']/1000).'</td><td>'.round($agr[4]['inc']/1000).'</td></tr>';
-	$table .= '<tr><td style="text-align:left;">Комиссия банка</td><td>('.round($agr[6]['bank']/1000).')</td><td>('.round($agr[5]['bank']/1000).')</td><td>('.round($agr[7]['bank']/1000).')</td><td>('.round($agr[4]['bank']/1000).')</td></tr>';
-	$table .= '<tr><td style="text-align:left;">Прибыль от комиссионных операций</td><td>'.round($agr[6]['pf']/1000).'</td><td>'.round($agr[5]['pf']/1000).'</td><td>'.round($agr[7]['pf']/1000).'</td><td>'.round($agr[4]['pf']/1000).'</td></tr>';
-	$table .= '<tr><td style="text-align:left;">Конвертационный доход</td><td>'.round($agr[6]['conv']/1000).'</td><td>'.round($agr[5]['conv']/1000).'</td><td>'.round($agr[7]['conv']/1000).'</td><td>'.round($agr[4]['conv']/1000).'</td></tr>';
-	$table .= '<tr class="total"><td style="text-align:left;">Всего прибыль по выводу</td><td>'.round(($agr[6]['pf']+$agr[6]['conv'])/1000).'</td><td>'.round(($agr[5]['pf']+$agr[5]['conv'])/1000).'</td><td>'.round(($agr[7]['pf']+$agr[7]['conv'])/1000).'</td><td>'.round(($agr[4]['pf']+$agr[4]['conv'])/1000).'</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Доходы по выводу</td><td>'.$agr[6]['inc'].'</td><td>'.$agr[5]['inc'].'</td><td>'.$agr[7]['inc'].'</td><td>'.$agr[4]['inc'].'</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Комиссия банка</td><td>('.$agr[6]['bank'].')</td><td>('.$agr[5]['bank'].')</td><td>('.$agr[7]['bank'].')</td><td>('.$agr[4]['bank'].')</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Прибыль от комиссионных операций</td><td>'.$agr[6]['pf'].'</td><td>'.$agr[5]['pf'].'</td><td>'.$agr[7]['pf'].'</td><td>'.$agr[4]['pf'].'</td></tr>';
+	$table .= '<tr><td style="text-align:left;">Конвертационный доход</td><td>'.$agr[6]['conv'].'</td><td>'.$agr[5]['conv'].'</td><td>'.$agr[7]['conv'].'</td><td>'.$agr[4]['conv'].'</td></tr>';
+	$table .= '<tr class="total"><td style="text-align:left;">Всего прибыль по выводу</td><td>'.($agr[6]['pf']+$agr[6]['conv']).'</td><td>'.($agr[5]['pf']+$agr[5]['conv']).'</td><td>'.($agr[7]['pf']+$agr[7]['conv']).'</td><td>'.($agr[4]['pf']+$agr[4]['conv']).'</td></tr>';
 	$table .= '<tr><td colspan="5"></td></tr>';
 	$table .= '<tr><td class="total">Прибыль всего:</td>
-		<td class="total" style="text-align:right;">'.round(($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv'])/1000).'</td>
-		<td class="total" style="text-align:right;">'.round(($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv'])/1000).'</td></tr>';
+		<td class="total" style="text-align:right;">'.($agr[2]['pf']+$agr[2]['conv']+$agr[6]['pf']+$agr[6]['conv']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[1]['pf']+$agr[1]['conv']+$agr[5]['pf']+$agr[5]['conv']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[3]['pf']+$agr[3]['conv']+$agr[7]['pf']+$agr[7]['conv']).'</td>
+		<td class="total" style="text-align:right;">'.($agr[0]['pf']+$agr[0]['conv']+$agr[4]['pf']+$agr[4]['conv']).'</td></tr>';
 	$table .= '</table>'; 
 
 	echo $table; 
